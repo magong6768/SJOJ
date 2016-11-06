@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjoj.mapper.UserMapper">
+
+    <!-- 定义条件查询的 sql 片段 -->
+ 
+    <!--用户登录查询-->
+    <select id="login"
+            parameterType="com.sjoj.bean.User"
+            resultType="com.sjoj.bean.User">
+        select * from users where user_id=#{user_id} and password=#{password}
+          
+    </select>
+    
+    <!--检验用户名是否存在-->
+    <select id="checkregister"
+            parameterType="com.sjoj.bean.User"
+            resultType="string">
+        select * from users where user_id=#{user_id}           
+    </select>
+    
+    <!--注册新用户-->
+    <insert id="register" parameterType="com.sjoj.bean.User">
+    insert into users(user_id,email,submit,solved,defunct,ip,accesstime,volume,language,password,reg_time,nick,school)
+    values(#{user_id},#{email},0,0,'N',#{ip},now(),1,1,#{password},now(),#{nick},#{school})
+    </insert>
+    
+</mapper>

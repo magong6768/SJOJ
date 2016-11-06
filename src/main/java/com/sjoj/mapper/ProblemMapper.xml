@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjoj.mapper.ProblemMapper">
+     <!-- 总数据量/一页显示条数，向上取整求得总页数 -->
+	<select id="gettotalPage" parameterType="int" resultType="int">
+		select ceil(count(1)/#{pageSize}) from problem
+	</select>
+	
+	<!-- 获取当前页面显示的题目列表 -->
+	<select id="getProblemList" parameterType="int" resultType="com.sjoj.bean.Problem">
+	select * from problem limit #{pageNow},#{pageSize}
+	</select>
+	
+	<!-- 新增题目 -->
+	<insert id="addNewProblem" parameterType="com.sjoj.bean.Problem" useGeneratedKeys="true" keyProperty="problem_id">
+    insert into problem(title,description,input,output,sample_input,sample_output,spj,hint,source,in_date,time_limit,memory_limit,defunct,accepted,submit,solved)
+    values(#{title},#{description},#{input},#{output},#{sample_input},#{sample_output},'1','暂时没用','暂时没用',now(),#{time_limit},#{memory_limit},'Y',0,0,0)
+    </insert>
+    
+    <!-- 获取题目内容-->
+	<select id="getProblemContent" parameterType="int" resultType="com.sjoj.bean.Problem">
+	select * from problem where problem_id=#{problem_id}
+	</select>
+	
+	<!-- 用户提交代码——向solution表插入数据-->
+	<insert id="insertsolution" parameterType="com.sjoj.bean.Solution" useGeneratedKeys="true" keyProperty="solution_id">
+    insert into solution(problem_id,user_id,time,memory,in_date,result,language,ip,contest_id,valid,num,code_length,judgetime,pass_rate,lint_error,judger)
+   (
+      select #{problem_id},#{user_id},time_limit,memory_limit,now(),0,#{language},#{ip},0,1,-1,#{code_length},now(),0,0,'lacal' from problem where problem_id=#{problem_id}
+    )
+    </insert>
+    
+    <!-- 用户提交代码——向source_code表插入数据-->
+	<insert id="insertsourcecode">
+    insert into source_code(solution_id,source) values(#{solution_id},#{source}) 
+    </insert>
+    
+    <!-- 用户提交代码——向source_code_user表插入数据-->
+	<insert id="insertsourcecodeuser">
+    insert into source_code_user(solution_id,source) values(#{solution_id},#{source}) 
+    </insert>
+	
+	
+	<!-- 总数据量/一页显示条数，向上取整求得总页数 -->
+	<select id="gettotalPageSolution" parameterType="int" resultType="int">
+		select ceil(count(1)/#{pageSize}) from solution
+	</select>
+	
+	<!-- 获取当前页面显示的题目列表 -->
+	<select id="getRankList" parameterType="int" resultType="com.sjoj.bean.Solution">
+	select solution_id,problem_id,user_id,language,t2.result_name from solution t1 
+	left join result t2 on t1.result=t2.result
+	order by solution_id desc
+	limit #{pageNow},#{pageSize}
+	
+	</select>
+	
+</mapper>

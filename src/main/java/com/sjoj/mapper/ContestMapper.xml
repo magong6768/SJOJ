@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjoj.mapper.ContestMapper">
+<!-- 增加竞赛 -->
+<insert id="addContest" parameterType="com.sjoj.bean.Contest" useGeneratedKeys="true" keyProperty="contest_id">
+insert into contest(title,start_time,end_time,defunct,description,private,langmask,password)
+values(#{title},#{start_time},#{end_time},#{defunct},#{description},#{privatee},0,#{password})
+</insert>
+<!-- 给竞赛增加题目 -->
+<insert id="addContestproblem"></insert>
+<!-- 获取竞赛列表 -->
+<select id="getallContest"></select>
+<!-- 获取禁赛题目列表 -->
+<select id="getContestProblem"></select>
+<!-- 获取禁赛成绩列表 -->
+<select id="getContestRanklist"></select>
+</mapper>
